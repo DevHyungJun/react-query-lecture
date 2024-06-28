@@ -13,8 +13,8 @@ export function InfinitePeople() {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError, error } = useInfiniteQuery({
     queryKey: ["sw-people"],
     queryFn: ({ pageParam = initialUrl }) => fetchUrl(pageParam),
-    getNextPageParam: (lastPage) => {
-      return lastPage.next;
+    getNextPageParam: (currentPage) => {
+      return currentPage.next;
     }
   });
 
@@ -33,11 +33,12 @@ export function InfinitePeople() {
       }}
         hasMore={hasNextPage}
       >
-        {data.pages.map(pageData => {
-          return pageData.results.map(person => {
-            return <Person key={person.name} name={person.name} hairColor={person.hair_color} eyeColor={person.eye_color} initialLoad={false} />
-          })
-        })}
+        {data.pages.map(pageData => 
+          pageData.results.map(person => 
+            <Person key={person.name} name={person.name} hairColor={person.hair_color} eyeColor={person.eye_color} height={person.height} skinColor={person.skin_color} gender={person.gender} 
+            initialLoad={false} />
+          )
+        )}
       </InfiniteScroll>
     </>
   )
