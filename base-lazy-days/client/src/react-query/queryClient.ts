@@ -1,5 +1,5 @@
 import { toast } from "@/components/app/toast";
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientConfig } from "@tanstack/react-query";
 
 const createTitle = (errorMsg: string, actionType: 'query' | 'mutation') => {
   const action = actionType === 'query' ? 'fetch' : 'update';
@@ -20,13 +20,13 @@ function errorHandler(title: string) {
   }
 }
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
+export const queryClientOptions: QueryClientConfig = {
+  defaultOptions: { 
     queries: {
-      staleTime: 600000, // 10분
-      gcTime: 900000, // 15분
-      refetchOnWindowFocus: false
-    }
+      staleTime: 600000, // 10 minutes
+      gcTime: 900000, // 15 minutes
+      refetchOnWindowFocus: false,
+    },
   },
   queryCache: new QueryCache({
     onError: (error) => {
@@ -40,4 +40,28 @@ export const queryClient = new QueryClient({
       errorHandler(title);
     }
   })
-});
+}
+
+// export const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       staleTime: 600000, // 10분
+//       gcTime: 900000, // 15분
+//       refetchOnWindowFocus: false
+//     }
+//   },
+//   queryCache: new QueryCache({
+//     onError: (error) => {
+//       const title = createTitle(error.message, 'query');
+//       errorHandler(title);
+//     }
+//   }),
+//   mutationCache: new MutationCache({
+//     onError: (error) => {
+//       const title = createTitle(error.message, 'mutation');
+//       errorHandler(title);
+//     }
+//   })
+// });
+
+export const queryClient = new QueryClient(queryClientOptions);
